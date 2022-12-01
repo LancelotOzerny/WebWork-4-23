@@ -4,22 +4,31 @@
 	margin: 0;
 	box-sizing: border-box;
 }
-.page-title {
+.page-title 
+{
 	text-align: center;
 	padding: 50px 0;
 }
-.start-text {
+.start-text 
+{
 	min-width: 100%;
 }
-.exercise-btn {
+.exercise-btn 
+{
 	height: 50px;
 	width: 100%;
 	border-radius: 3px;
 	outline: none;
 	border: none;
 	transition: .5s;
+
+	margin-top: 20px;
+	margin-bottom: 50px;
+
+	box-shadow: 0 0 6px #222;
 }
-.exercise-btn-wrapper:hover .exercise-btn {
-	transform: translate(20px, 20px);
-	box-shadow: 0 0 4px #222;
+.exercise-btn-wrapper:hover .exercise-btn 
+{
+	transform: translate(10px, 20px);
+	box-shadow: 0 0 10px #222;
 }
