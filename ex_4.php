@@ -10,7 +10,7 @@
 
 	// Если пишем preset то вызываем одну из страниц (первую, т. к. вторая заблокирована)
 	if (isset($_GET['preset']))
-	{
+	{	
 		if ($_GET['preset'] == 1)
 		{
 			$page = new DOMDocument();
@@ -36,7 +36,7 @@
 	// Если нажата кнопка Задание 6
 	if (isset($_POST['exercise-6']))
 	{
-
+		$result = TextWorker::CommaPlacement($_POST['start-text']);
 	}
 
 
@@ -110,13 +110,47 @@
 			</div>
 		</div>
 
-		<div class="row">
-			<div class="col-md-12">
-				<div class="edited-text">
-					<?php echo $result; ?>
+		<?php 
+			if (!empty($result))
+			{
+		?>
+			<div class="row">
+				<div class="col-md-12">
+					<h2 class="page-title">Реализация задания</h2>
 				</div>
 			</div>
-		</div>
+			
+			<div class="row">
+				<div class="col-md-12">
+					<div class="edited-text">
+						<?php echo $result; ?>
+					</div>
+				</div>
+			</div>
+		<?php 
+			}
+		?>
+			
+		<?php 
+			if (isset($_POST['start-text']))
+			{
+		?>
+			<div class="row">
+				<div class="col-md-12">
+					<h2 class="page-title">Исходный текст</h2>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-md-12">
+					<div class="start-text-output">
+						<?php echo $_POST['start-text']; ?>
+					</div>
+				</div>
+			</div>
+		<?php 
+		}
+		?>
 	</div>
 
 	<script>document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>')</script>

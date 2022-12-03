@@ -32,3 +32,11 @@
 	transform: translate(10px, 20px);
 	box-shadow: 0 0 10px #222;
 }
+.edited-text
+{
+	padding-bottom: 50px;
+}
+.start-text-output 
+{
+	padding-bottom: 50px;
+}
