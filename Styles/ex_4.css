@@ -40,3 +40,19 @@
 {
 	padding-bottom: 50px;
 }
+.exercise-navigation 
+{
+	list-style: none;
+}
+.exercise-navigation a
+{
+	color: #222;
+	text-decoration: none;
+	cursor: pointer;
+	font-size: 18px;
+	line-height: 40px;
+}
+.exercise-navigation li::before
+{
+	content: "- ";
+}

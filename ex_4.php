@@ -24,6 +24,13 @@
 			$page->loadHTMLFile("ex_4_exercises/ex_4.3.html");
 			$_POST['start-text'] = $page->saveHTML();
 		}
+
+		if ($_GET['preset'] == 14)
+		{
+			$page = new DOMDocument();
+			$page->loadHTMLFile("ex_4_exercises/ex_4.14.html");
+			$_POST['start-text'] = $page->saveHTML();
+		}
 	}
 
 	// Если нажата кнопка Задание 3
@@ -43,7 +50,7 @@
 	// Если нажата кнопка Задание 14
 	if (isset($_POST['exercise-14']))
 	{
-
+		$result = TextWorker::CreateLinkHeader($_POST['start-text']);
 	}
 
 

@@ -49,5 +49,34 @@
 		{
 			return preg_replace('/<(header|footer).*?>(.*?)<\/\1>/ism', "", $str);
 		}
+
+		// Метод, который позволяет создать меню ссылок
+		static function CreateLinkHeader(string &$text)
+		{
+			// Очищаем текст от header и footer
+			$text = TextWorker::RemoveHeadersAndFooters($text);
+			
+			// Создаем DomDocument позволяющйи работать со страницей
+			$dom = new DOMDocument();
+			$dom->loadHTML(mb_convert_encoding( $text, 'HTML-ENTITIES', 'UTF-8' ));
+
+			// ищем все теги a
+			$aTags = $dom->getElementsByTagName('a');
+
+			// Итог, который мы возвращаем
+			$result = "";
+
+			// Перебираем все элементы
+			$result .= "<ul class=\"exercise-navigation\">";
+			for ($i = 0; $i < $aTags->length; ++$i)
+			{
+				$aTags[$i]->setAttribute("name", "header-link-" . $i);
+				$result .= "<li><a href=\"#" ."header-link-" . $i ."\">" . $aTags[$i]->nodeValue . "<a/></li>";
+			}
+			$result .= "</ul>";
+			$text = $dom->saveHTML();
+
+			return $result;
+		}
 	}
 ?>
