@@ -18,7 +18,7 @@
 			$_POST['start-text'] = $page->saveHTML();
 		}
 
-		if ($_GET['preset'] == 3)
+		if ($_GET['preset'] == 3 || $_GET['preset'] == 6)
 		{
 			$page = new DOMDocument();
 			$page->loadHTMLFile("ex_4_exercises/ex_4.3.html");
@@ -43,7 +43,7 @@
 	// Если нажата кнопка Задание 6
 	if (isset($_POST['exercise-6']))
 	{
-		$result = TextWorker::CommaPlacement($_POST['start-text']);
+		$result = preg_replace("#(\s+)(а|но)(\s+)#ui", ",$1$2$3", $_POST['start-text']);
 	}
 
 
@@ -57,7 +57,7 @@
 	// Если нажата кнопка Задание 18
 	if (isset($_POST['exercise-18']))
 	{
-
+		$result = TextWorker::LightRepeats($_POST['start-text']);
 	}
 ?>
 
@@ -81,7 +81,7 @@
 
 		<div class="row">
 			<div class="col-md-12">
-				<form class="page-form" method="Post" action="ex_4.php?go" enctype="multipart/form-data">
+				<form class="page-form" method="Post" action="ex_4.php?go#Result" enctype="multipart/form-data">
 					<div class="row">
 						<div class="col-md-12">
 							<textarea name="start-text" class="start-text" cols="30" rows="10"><?php if (isset($_POST['start-text'])){echo $_POST['start-text'];}?></textarea>
@@ -123,7 +123,7 @@
 		?>
 			<div class="row">
 				<div class="col-md-12">
-					<h2 class="page-title">Реализация задания</h2>
+					<h2 class="page-title" id="Result">Реализация задания</h2>
 				</div>
 			</div>
 			

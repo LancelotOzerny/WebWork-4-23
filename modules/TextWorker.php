@@ -31,19 +31,6 @@
 			return $result;
 		}
 
-		// Метод, который позволяет расставить запятые перед А и НО
-		static function CommaPlacement($text)
-		{
-			// Очищаем текст от header и footer
-			$text = TextWorker::RemoveHeadersAndFooters($text);
-
-			$text = preg_replace("#([а-яА-Яa-zA-Z])(\s)?(<*>)*(\s)?(но) #iu", "$1$2$3, но ", $text);
-			$text = preg_replace("#([а-яА-Яa-zA-Z])(\s)?(<*>)*(\s)?(а) #iu", "$1$2$3, а ", $text);
-			$text = preg_replace("#\.\.\.#", "&#8230;", $text);
-
-			return $text;
-		}
-
 		// Метод, который позволяет убрать все шапки и подвалы
 		static function RemoveHeadersAndFooters(string $str)
 		{
@@ -77,6 +64,51 @@
 			$text = $dom->saveHTML();
 
 			return $result;
+		}
+
+		static function LightRepeats($text)
+		{
+			$result = "";
+			// Очищаем текст от header и footer
+			$text = TextWorker::RemoveHeadersAndFooters($text);
+
+			// Находим все P теги
+			preg_match_all("#<.*p.*>.*</p>#", $text, $pTags);	
+			preg_match_all("#<.*p.*>.*</p>#", $text, $pStartTags);	
+			
+			for ($i = 0; $i < count($pTags[0]); $i++)
+			{
+				$pClearText = strip_tags($pTags[0][$i]);
+				
+				// выберем содержимое
+				$pClearText = preg_replace("#[^[(a-zA-Zа-яА-Я)|\s]#ui", "", $pClearText);
+				preg_match_all("#\b\S+\b#ui", $pClearText, $words);
+				
+				$repeatedWords = array();
+
+				foreach ($words[0] as $word) 
+				{
+					preg_match_all("#\b" . $word . "\b#ui", $pClearText, $repeat);
+					if (count($repeat[0]) > 2 && !in_array($word, $repeatedWords))
+					{
+						array_push($repeatedWords, $word);
+					}
+				}
+
+				foreach ($repeatedWords as $word) 
+				{
+					$pTags[0][$i] = preg_replace("#(" . $word . ")#", "<mark>$1</mark>", $pTags[0][$i]);
+					$result .= $pTags[0][$i];
+				}
+			}
+
+			for ($i = 0; $i < count($pStartTags[0]); $i++)
+			{
+				echo $pStartTags[0][$i] . "";
+				$text = str_replace($pStartTags[0][$i], $pTags[0][$i], $text);			
+			}
+
+			return $text;
 		}
 	}
 ?>
