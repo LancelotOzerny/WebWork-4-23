@@ -104,7 +104,6 @@
 
 			for ($i = 0; $i < count($pStartTags[0]); $i++)
 			{
-				echo $pStartTags[0][$i] . "";
 				$text = str_replace($pStartTags[0][$i], $pTags[0][$i], $text);			
 			}
 
