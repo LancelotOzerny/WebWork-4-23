@@ -1,5 +1,33 @@
 <?php
-	
+	// Подключение класса
+	require("modules/DBWorker.php");
+
+	$message = "";
+
+	if (isset($_POST['export']))
+	{
+		// Кодируем таблицу в json
+		$jsonString = json_encode(DBWORKER::QueryResult("SELECT * FROM artist"));
+		$uploadDir = 'export/';
+		$filename = "artist_exported.json";
+		$export_url = "http://localhost/SOLD_LR/Worker.php";
+
+		file_put_contents($filename, $jsonString);
+
+		$request = curl_init($export_url);
+
+		curl_setopt($request, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($request, CURLOPT_POSTFIELDS, 
+			array(
+				"file_exported" => new CURLFile($filename, null, $filename),
+				"file_name" => $filename,
+				"file_path" => $uploadDir,
+				"file_data" => $jsonString
+			)
+		);
+		$message = curl_exec($request);
+		unlink($filename);
+	}
 ?>
 
 <!DOCTYPE html>
@@ -30,6 +58,13 @@
 		<form action="export.php" method="Post" class="page-form">
 			<input class="page-form-button" type="submit" name="export" value="Экспортировать">
 		</form>
+
+		<p style="margin-top: 50px;">
+			<?php 
+				echo $message;
+			?>
+		</p>
+
 
 		<script>document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>')</script>
 	</div>
