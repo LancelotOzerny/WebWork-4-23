@@ -1,22 +1,33 @@
 <?php
+	// Подключение класса
 	require("modules/DBWorker.php");
+	
+	// Отключение предупреждений
 	error_reporting(0);
 
 	if (isset($_POST["import"]))
 	{
 		try
 		{
+			// Путь к файлу
 			$filePath = $_POST['import-file-link'];	
 			
+			// Если формат файла не json то выдаем ошибку (строка 44)
 			if (end(explode(".", $filePath)) == "json")
 			{
+				// Загрузка json файла
 				$jsonString = file_get_contents($filePath);
-				
-				$json = '{"1":"Значение 1","2":"Значение 2","3":"Значение 3","4":"Значение 4","5":"Значение 5"}';
+
+				// Декодирование json файла
 				$data = json_decode($jsonString, true);
+				
+				// Удаление записей из таблицы
 				DBWorker::Query("DELETE FROM `artist`");
 				
+				// Количество записей
 				$count_of_fields = 0;
+				
+				// Вставка записей
 				foreach ($data as $field) 
 				{
 					$id = $field['id'];
@@ -31,6 +42,7 @@
 					
 					$count_of_fields++;
 				}
+
 				$import = true;
 			}
 			else
