@@ -38,7 +38,16 @@
     if (isset($_POST['delete-artist']))
     {
         $id = $_POST['artist-id'];
+        $field = DBWorker::Query("SELECT image FROM actors.artist WHERE actors.artist.id = " . $id);
+        $image = mysqli_fetch_assoc($field)['image'];
+
+        if ($image != "no_img.png")
+        {
+            unlink("../images/" . $image);
+        }
+
         $sql = "DELETE FROM actors.artist WHERE `id` = '" . $id . "'";
+
         DBWorker::Query($sql);
         header("Location: Artists.php");
     }
