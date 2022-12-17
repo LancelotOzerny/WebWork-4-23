@@ -2,18 +2,43 @@
 require_once "../modules/DBWorker.php";
 require_once "ArtistTable.php";
 
+$errors = [];
+
 if (isset($_POST['delete-artist']))
 {
     ArtistTable::Delete($_POST['artist-id']);
 }
 if (isset($_POST['create-artist']))
 {
-    $name = htmlentities($_POST['new-name']);
-    $biography = htmlentities($_POST['new-biography']);
+    $name = Validator::Clean($_POST['new-name']);
+    $biography = Validator::Clean($_POST['new-biography']);
+
     $price = $_POST['new-price'];
     $category_id = $_POST['new-category-id'];
 
-    ArtistTable::Create($_FILES['new-image'], $name, $biography, $price, $category_id);
+    // Проверка на числовые поля. Через код элемента можно поставить text
+    if (!is_numeric($price) || !is_numeric($category_id))
+    {
+        $errors[] = "Ошибка при считывании полей. Проверьте числовые поля на соответствие типу.";
+    }
+
+    // Проверка поля цены на отрицательное значение
+    else if ($price < 0)
+    {
+        $errors[] = "Ошибка при работе с ценой. Она не может быть отрицательной. Проверьте цену и повторите снова.";
+    }
+
+    // Проверка полей на пустые значения. Можно поставить 2 пробела и все пройдет, то есть могут быть пустые значения.
+    else if (empty($name) || empty($biography))
+    {
+        $errors[] = "Ошибка при считывании полей. Проверьте обязательные поля на пустые значения.";
+    }
+
+    // Ошибок нет? Создаем поле
+    else
+    {
+        ArtistTable::Create($_FILES['new-image'], $name, $biography, $price, $category_id);
+    }
 }
 ?>
 
@@ -46,6 +71,15 @@ if (isset($_POST['create-artist']))
                 <a href="" class="btn btn-success mt-5" data-bs-toggle="modal" data-bs-target="#create">
                     <i class="fa fa-plus"></i>
                 </a>
+
+                <div class="errors-block">
+                    <?php
+                        foreach ($errors as $error)
+                        {
+                            echo "<p class='fs-5 mt-2'>" . $error . "</p>";
+                        }
+                    ?>
+                </div>
 
                 <table class="table table-bordered mt-5 text-center">
                     <thead>

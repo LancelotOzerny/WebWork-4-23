@@ -1,5 +1,6 @@
 <?php
 require_once "../modules/DBWorker.php";
+require_once "../modules/Validator.php";
 
 class ArtistTable
 {
@@ -8,13 +9,16 @@ class ArtistTable
         $field = DBWorker::Query("SELECT actors.artist.id FROM actors.artist ORDER BY id DESC LIMIT 1");
         $current_id = mysqli_fetch_assoc($field)['id'] + 1;
 
-        $artist_image = "NULL";
-        $image_exploded = explode(".", $image['name']);
-        $image_path = "../images/image-" . $current_id . "." . end($image_exploded);
+        $artist_image = "no_img.png";
 
-        if (move_uploaded_file($image['tmp_name'], $image_path)) ;
-        {
-            $artist_image = "image-" . $current_id . "." . end($image_exploded);
+        if (!empty($image['name'])) {
+            $image_exploded = explode(".", $image['name']);
+            $image_path = "../images/image-" . $current_id . "." . end($image_exploded);
+
+            if (move_uploaded_file($image['tmp_name'], $image_path)) ;
+            {
+                $artist_image = "image-" . $current_id . "." . end($image_exploded);
+            }
         }
 
         $sql = "INSERT INTO actors.artist (`name`, `image`, `biography`, `price`, `category_id`) 
