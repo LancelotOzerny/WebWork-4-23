@@ -107,8 +107,7 @@ if (isset($_POST['create-artist']))
                                                             JOIN actors.category ON actors.category.id = 
                                                                                     actors.artist.category_id");
 
-                            foreach($artists as $artist):
-                        ?>
+                            foreach($artists as $artist): ?>
                         <form action="Artists.php" method="post" class="form-control">
                             <input type="text" name="artist-id" hidden value="<?php echo $artist['id'] ?>">
                             <tr>
@@ -126,80 +125,77 @@ if (isset($_POST['create-artist']))
                                         <i class="fa fa-trash"></i></button>
                                 </td>
 
-
-                                <!-- Edit -->
-                                <div class="modal fade" id="edit-<?php echo $artist['id'] ?>" tabindex="-1"
-                                     role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <!-- EDIT -->
+                                <div class="modal fade" id="edit-<?php echo $artist['id']; ?>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                     <div class="modal-dialog" role="document">
                                         <div class="modal-content">
                                             <div class="modal-header">
                                                 <h5 class="modal-title" id="exampleModalLabel">Изменить запись</h5>
-                                                <button type="button" class="btn-danger close" data-bs-dismiss="modal"
-                                                        aria-label="Close">
+                                                <button type="button" class="btn-danger close" data-bs-dismiss="modal" aria-label="Close">
                                                     <span aria-hidden="true">&times;</span>
                                                 </button>
                                             </div>
-                                            <form action="Artists.php" method="post" enctype="multipart/form-data">
-                                                <div class="modal-body">
-                                                    <!--Name-->
-                                                    <div class="form-group mt-3">
-                                                        <p class="text-center">Name</p>
-                                                        <input name="new-name" required class="form-control" type="text"
-                                                               value="<?php echo $artist['name'] ?>">
-                                                    </div>
+                                            <div class="modal-body">
+                                                <!--Image-->
+                                                <div class="form-group mt-3">
+                                                    <p class="text-center">Image</p>
+                                                    <input type="file" name="new-image" class="form-control"
+                                                </div>
 
-                                                    <!--biography-->
-                                                    <div class="form-group mt-3">
-                                                        <p class="text-center">Biography</p>
-                                                        <textarea class="form-control" name="new-biography"
-                                                                  cols="30" rows="10"><?php echo $artist['biography'] ?></textarea>
-                                                    </div>
+                                                <!--Name-->
+                                                <div class="form-group mt-3">
+                                                    <p class="text-center">Name</p>
+                                                    <input name="new-name" required class="form-control" type="text">
+                                                </div>
 
-                                                    <!--price-->
-                                                    <div class="form-group mt-3">
-                                                        <p class="text-center">Price</p>
-                                                        <input name="new-price" min="0" required class="form-control"
-                                                               type="number" value="<?php echo $artist['price'] ?>">
-                                                    </div>
+                                                <!--biography-->
+                                                <div class="form-group mt-3">
+                                                    <p class="text-center">Biography</p>
+                                                    <textarea class="form-control" name="new-biography" id="" cols="30" rows="10"></textarea>
+                                                </div>
 
-                                                    <!--category -->
-                                                    <div class="form-group mt-3">
-                                                        <p class="text-center">Category </p>
-                                                        <select class="form-select" name="new-category-id">
-                                                            <?php
-                                                            $categories = DBWorker::Query("SELECT * FROM actors.category");
-                                                            foreach($categories as $category):
-                                                                ?>
-                                                                <option <?php if ($category['id'] == $artist['category_id']) echo "selected"?> value="<?php echo $category['id'] ?>">
-                                                                    <?php echo $category['category'] ?>
-                                                                    (<?php echo $category['id'] ?>)</option>
-                                                            <?php
-                                                            endforeach;
+                                                <!--price-->
+                                                <div class="form-group mt-3">
+                                                    <p class="text-center">Price</p>
+                                                    <input name="new-price" min="0" required class="form-control" type="number">
+                                                </div>
+
+                                                <!--category -->
+                                                <div class="form-group mt-3">
+                                                    <p class="text-center">Category </p>
+                                                    <select class="form-select" required name="new-category-id">
+                                                        <?php
+                                                        $categories = DBWorker::Query("SELECT * FROM actors.category");
+                                                        foreach($categories as $category):
                                                             ?>
-                                                        </select>
-                                                    </div>
+                                                            <option value="<?php echo $category['id'] ?>"><?php echo $category['category'] ?> (<?php echo $category['id'] ?>)</option>
+                                                        <?php
+                                                        endforeach;
+                                                        ?>
+                                                    </select>
                                                 </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
-                                                    <button type="submit" name="edit-artist" class="btn btn-primary">Сохранить</button>
-                                                </div>
-                                            </form>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                                                <button type="submit" name="edit-artist" class="btn btn-primary">Сохранить</button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                                <!-- Edit-->
+                                <!-- EDIT-->
 
-                                <?php
-                                    endforeach;
-                                ?>
                             </tr>
                         </form>
+
+                        <?php
+                            endforeach;
+                        ?>
                     </tbody>
                 </table>
             </div>
         </div>
 
-        <!-- Create -->
+        <!-- CREATE -->
         <div class="modal fade" id="create" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
