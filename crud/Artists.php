@@ -15,37 +15,8 @@ if (isset($_POST['create-artist']))
 
     $price = $_POST['new-price'];
     $category_id = $_POST['new-category-id'];
-    $category_count = count(mysqli_fetch_all(DBWorker::Query("SELECT * FROM actors.category WHERE actors.category.id = " . $category_id)));
 
-    // Проверка на числовые поля. Через код элемента можно поставить text
-    if (!is_numeric($price) || !is_numeric($category_id))
-    {
-        $errors[] = "Ошибка при считывании полей. Проверьте числовые поля на соответствие типу.";
-    }
-
-    // Проверка поля цены на отрицательное значение
-    else if ($price < 0)
-    {
-        $errors[] = "Ошибка при работе с ценой. Она не может быть отрицательной. Проверьте цену и повторите снова.";
-    }
-
-    // Проверка полей на пустые значения. Можно поставить 2 пробела и все пройдет, то есть могут быть пустые значения.
-    else if (empty($name) || empty($biography))
-    {
-        $errors[] = "Ошибка при считывании полей. Проверьте обязательные поля на пустые значения.";
-    }
-
-    // Проверка на корректность категории. Через код элемента категории можно поставить любое значение.
-    else if ($category_count == 0)
-    {
-        $errors[] = "Ошибка при считывании категории. Повторите попытку еще раз.";
-    }
-
-    // Ошибок нет? Создаем поле
-    else
-    {
-        ArtistTable::Create($_FILES['new-image'], $name, $biography, $price, $category_id);
-    }
+    $errors = ArtistTable::Create($_FILES['new-image'], $name, $biography, $price, $category_id);
 }
 ?>
 
@@ -145,19 +116,19 @@ if (isset($_POST['create-artist']))
                                                 <!--Name-->
                                                 <div class="form-group mt-3">
                                                     <p class="text-center">Name</p>
-                                                    <input name="new-name" required class="form-control" type="text">
+                                                    <input name="new-name" required class="form-control" type="text" value="<?php echo $artist['name'] ?>">
                                                 </div>
 
                                                 <!--biography-->
                                                 <div class="form-group mt-3">
                                                     <p class="text-center">Biography</p>
-                                                    <textarea class="form-control" name="new-biography" id="" cols="30" rows="10"></textarea>
+                                                    <textarea class="form-control" name="new-biography" id="" cols="30" rows="10"><?php echo $artist['biography'] ?></textarea>
                                                 </div>
 
                                                 <!--price-->
                                                 <div class="form-group mt-3">
                                                     <p class="text-center">Price</p>
-                                                    <input name="new-price" min="0" required class="form-control" type="number">
+                                                    <input name="new-price" min="0" required class="form-control" type="number" value="<?php echo $artist['price'] ?>">
                                                 </div>
 
                                                 <!--category -->
@@ -168,7 +139,7 @@ if (isset($_POST['create-artist']))
                                                         $categories = DBWorker::Query("SELECT * FROM actors.category");
                                                         foreach($categories as $category):
                                                             ?>
-                                                            <option value="<?php echo $category['id'] ?>"><?php echo $category['category'] ?> (<?php echo $category['id'] ?>)</option>
+                                                            <option <?php if ($artist['category_id'] == $category['id']) echo "Selected"; ?> value="<?php echo $category['id'] ?>"><?php echo $category['category'] ?> (<?php echo $category['id'] ?>)</option>
                                                         <?php
                                                         endforeach;
                                                         ?>
