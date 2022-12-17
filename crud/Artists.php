@@ -1,5 +1,20 @@
 <?php
-    require_once "../modules/DBWorker.php";
+require_once "../modules/DBWorker.php";
+require_once "ArtistTable.php";
+
+if (isset($_POST['delete-artist']))
+{
+    ArtistTable::Delete($_POST['artist-id']);
+}
+if (isset($_POST['create-artist']))
+{
+    $name = htmlentities($_POST['new-name']);
+    $biography = htmlentities($_POST['new-biography']);
+    $price = $_POST['new-price'];
+    $category_id = $_POST['new-category-id'];
+
+    ArtistTable::Create($_FILES['new-image'], $name, $biography, $price, $category_id);
+}
 ?>
 
 <!DOCTYPE html>
@@ -53,7 +68,7 @@
 
                             foreach($artists as $artist):
                         ?>
-                        <form action="artists_crud.php" method="post" class="form-control">
+                        <form action="Artists.php" method="post" class="form-control">
                             <input type="text" name="artist-id" hidden value="<?php echo $artist['id'] ?>">
                             <tr>
                                 <td><?php echo $artist['id'] ?></td>
@@ -83,7 +98,7 @@
                                                     <span aria-hidden="true">&times;</span>
                                                 </button>
                                             </div>
-                                            <form action="artists_crud.php" method="post" enctype="multipart/form-data">
+                                            <form action="Artists.php" method="post" enctype="multipart/form-data">
                                                 <div class="modal-body">
                                                     <!--Name-->
                                                     <div class="form-group mt-3">
@@ -153,7 +168,7 @@
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <form action="artists_crud.php?go" class="form-control" method="post" enctype="multipart/form-data">
+                    <form action="Artists.php?go" class="form-control" method="post" enctype="multipart/form-data">
                         <div class="modal-body">
                             <!--Image-->
                             <div class="form-group mt-3">
