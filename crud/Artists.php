@@ -15,6 +15,7 @@ if (isset($_POST['create-artist']))
 
     $price = $_POST['new-price'];
     $category_id = $_POST['new-category-id'];
+    $category_count = count(mysqli_fetch_all(DBWorker::Query("SELECT * FROM actors.category WHERE actors.category.id = " . $category_id)));
 
     // Проверка на числовые поля. Через код элемента можно поставить text
     if (!is_numeric($price) || !is_numeric($category_id))
@@ -32,6 +33,12 @@ if (isset($_POST['create-artist']))
     else if (empty($name) || empty($biography))
     {
         $errors[] = "Ошибка при считывании полей. Проверьте обязательные поля на пустые значения.";
+    }
+
+    // Проверка на корректность категории. Через код элемента категории можно поставить любое значение.
+    else if ($category_count == 0)
+    {
+        $errors[] = "Ошибка при считывании категории. Повторите попытку еще раз.";
     }
 
     // Ошибок нет? Создаем поле
