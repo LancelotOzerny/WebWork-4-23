@@ -1,4 +1,6 @@
 <?php
+error_reporting(false);
+
 require_once "../modules/DBWorker.php";
 require_once "ArtistTable.php";
 
@@ -8,6 +10,7 @@ if (isset($_POST['delete-artist']))
 {
     ArtistTable::Delete($_POST['artist-id']);
 }
+
 if (isset($_POST['create-artist']))
 {
     $name = Validator::Clean($_POST['new-name']);
@@ -18,6 +21,20 @@ if (isset($_POST['create-artist']))
 
     $errors = ArtistTable::Create($_FILES['new-image'], $name, $biography, $price, $category_id);
 }
+
+if (isset($_POST['edit-artist']))
+{
+    $id = $_POST['artist-id'];
+
+    $name = Validator::Clean($_POST['new-name']);
+    $biography = Validator::Clean($_POST['new-biography']);
+
+    $price = $_POST['new-price'];
+    $category_id = $_POST['new-category-id'];
+
+    $errors = ArtistTable::Update($id, $_FILES['new-image'], $name, $biography, $price, $category_id);
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -73,17 +90,18 @@ if (isset($_POST['create-artist']))
                     </thead>
                     <tbody>
                         <?php
-                            $artists = DBWorker::Query("SELECT actors.artist.*, actors.category.category 
-                                                            FROM actors.artist 
-                                                            JOIN actors.category ON actors.category.id = 
-                                                                                    actors.artist.category_id");
+                        $artists = DBWorker::Query("SELECT actors.artist.*, actors.category.category 
+                                                        FROM actors.artist 
+                                                        JOIN actors.category ON actors.category.id = 
+                                                                                actors.artist.category_id");
 
-                            foreach($artists as $artist): ?>
-                        <form action="Artists.php" method="post" class="form-control">
+                        foreach($artists as $artist): ?>
+                        <form action="Artists.php" method="post" class="form-control" enctype="multipart/form-data">
+                            <input hidden type="text" name="artist-id" value="<?php echo $artist['id']; ?>">
                             <input type="text" name="artist-id" hidden value="<?php echo $artist['id'] ?>">
                             <tr>
                                 <td><?php echo $artist['id'] ?></td>
-                                <td><img src="../images/<?php echo $artist['image']; ?>" width="100px" alt="Image"></td>
+                                <td><img src="../images/<?php echo $artist['image']; ?>" width="150px" alt="Image"></td>
                                 <td><?php echo $artist['name'] ?></td>
                                 <td><?php echo $artist['biography'] ?></td>
                                 <td><?php echo $artist['price'] ?></td>
