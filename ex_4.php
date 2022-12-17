@@ -72,6 +72,8 @@
 	<link rel="stylesheet" href="Styles/ex_4.css">
 </head>
 <body>
+	<?php include_once "navigation.html"; ?>
+
 	<div class="container">
 		<div class="row">
 			<div class="col-md-12">

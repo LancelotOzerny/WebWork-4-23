@@ -14,9 +14,10 @@
 
 				if (mysqli_connect_errno())
 			    {
-			        $instance = null;
 			        echo "Ошибка подключения к БД";
-			 		return;
+                    echo mysqli_error(self::$instance);
+                    $instance = null;
+                    return;
 			    }
 			}
 
@@ -24,16 +25,16 @@
 		}
 
 		// Запрос к БД
-		static public function Query(string $query)
+		static public function Query(string $sql)
 		{
-			mysqli_query(DBWorker::GetInstance(), $query);
-		}
+			$query = mysqli_query(DBWorker::GetInstance(), $sql);
 
-		// Запрос к БД с получением результата
-		static public function QueryResult(string $query)
-		{
-			$query_result = mysqli_fetch_all(mysqli_query(DBWorker::GetInstance(), $query), MYSQLI_ASSOC);
-			return $query_result;
+            if ($query === false)
+            {
+                die(mysqli_error(self::$instance));
+            }
+
+            return $query;
 		}
 	}
 ?>
