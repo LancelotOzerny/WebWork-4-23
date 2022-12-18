@@ -43,14 +43,14 @@ class ArtistTable
     public static function Update(int $id, $image, string $name, string $biography, int $price, int $category_id)
     {
         $field = mysqli_fetch_assoc(DBWorker::Query("SELECT image FROM actors.artist WHERE `id` = " . $id));
-        $artist_image = "no_img.png";
+        $artist_image = $field['image'];
 
         // Проверяем поля на наличие ошибок
         $errors = self::CheckFields($name, $biography, $price, $category_id);
 
         if (empty($errors))
         {
-            // Ошибок нет? Редактируем поле
+            // Ошибок нет? Редактируем  поле
             if (!empty($image['name'])) {
                 $image_exploded = explode(".", $image['name']);
                 $image_path = "../images/image-" . $id . "." . end($image_exploded);
@@ -119,7 +119,7 @@ class ArtistTable
         }
 
         // Проверка полей на пустые значения. Можно поставить 2 пробела и все пройдет, то есть могут быть пустые значения.
-        else if (empty($name) || empty($biography))
+        else if (empty($name))
         {
             $errors[] = "Ошибка при считывании полей. Проверьте обязательные поля на пустые значения.";
         }
